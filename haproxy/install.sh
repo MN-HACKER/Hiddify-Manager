@@ -1,7 +1,6 @@
 source ../common/utils.sh
 rm -rf *.template
 if is_installed sniproxy; then
-# systemctl kill hiddify-sniproxy > /dev/null 2>&1
     systemctl stop hiddify-sniproxy >/dev/null 2>&1
     systemctl disable hiddify-sniproxy >/dev/null 2>&1
     pkill -9 sniproxy >/dev/null 2>&1
