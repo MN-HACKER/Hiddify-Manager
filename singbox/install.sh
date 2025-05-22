@@ -2,12 +2,12 @@ source ../common/utils.sh
 rm -rf configs/*.template
 
 # latest= #$(get_release_version hiddify-sing-box)
-latest=1.8.8.h4
+latest=1.11.11
 
-if [ "$(cat VERSION 2>/dev/null)" != "$latest" ] || ! is_installed ./sing-box; then
+if [ "$(cat VERSION 2>/dev/null)" != "v1.11.11" ] || ! is_installed ./sing-box; then
     pkg=$(dpkg --print-architecture)
     
-    curl -sLo sb.zip https://github.com/hiddify/hiddify-sing-box/releases/download/v$latest/sing-box-linux-$pkg.zip > /dev/null
+    curl -sLo sb.zip https://github.com/hiddify/hiddify-sing-box/releases/download/v1.11.11/sing-box-linux-$pkg.zip > /dev/null
     
     unzip -o sb.zip > /dev/null
     cp -f sing-box-*/sing-box . 2>/dev/null
