@@ -1,14 +1,14 @@
 source ../common/utils.sh
 # latest= #$(get_release_version hiddify-sing-box)
-latest=1.8.23
+latest=25.5.16
 mkdir -p bin
 if [ "$(cat VERSION 2>/dev/null)" != "$latest" ] || ! is_installed ./bin/xray; then
     pkg=$(dpkg --print-architecture)
     
     if [[ $pkg == "arm64" ]]; then
-        curl -sLo sb.zip https://github.com/XTLS/Xray-core/releases/download/v$latest/Xray-linux-arm64-v8a.zip > /dev/null
+        curl -sLo sb.zip https://github.com/XTLS/Xray-core/releases/download/v25.5.16/Xray-linux-arm64-v8a.zip > /dev/null
     else
-        curl -sLo sb.zip https://github.com/XTLS/Xray-core/releases/download/v$latest/Xray-linux-64.zip > /dev/null
+        curl -sLo sb.zip https://github.com/XTLS/Xray-core/releases/download/v25.5.16/Xray-linux-64.zip > /dev/null
     fi
     systemctl stop hiddify-xray.service > /dev/null 2>&1
     rm -rf bin/*
