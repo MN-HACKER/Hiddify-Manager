@@ -1,0 +1,70 @@
+{% set region = {
+    'zh': 'cn',
+    'cn': 'cn',
+    'ir': 'ir',
+    'ru': 'ru'
+}.get(hconfigs['country'], 'cn') %}
+
+{
+  "route": {
+    "rule_set":[
+         {
+            "tag":"geoip-{{region}}",
+            "type":"remote",
+            "format":"binary",
+            "update_interval":"1d",
+            "url":"https://raw.githubusercontent.com/Chocolate4U/Iran-sing-box-rules/rule-set/geoip-{{region}}.srs"
+         },
+         {
+            "tag":"geosite-{{region}}",
+            "type":"remote",
+            "format":"binary",
+            "update_interval":"1d",
+            "url":"https://raw.githubusercontent.com/Chocolate4U/Iran-sing-box-rules/rule-set/geosite-{{region}}.srs"
+         }
+    ],
+    // "domainStrategy": "AsIs",
+    "final": {% if hconfigs['warp_mode'] == 'all' %}"WARP"{% else %}"freedom"{% endif %},
+      "rules": [
+        {
+            "outbound": "freedom",
+            "port": [53]
+        },
+        {
+          "protocol": "quic",
+          "port": [443],
+          "outbound": "blackhole"
+        },
+        {
+            "outbound": {% if hconfigs['warp_mode'] == 'disable' %}"forbidden_sites"{% else %}"WARP"{% endif %},
+             "rule_set":["geoip-{{region}}", "geosite-{{region}}"]
+        },
+        {
+            "outbound": {% if hconfigs['warp_mode'] == 'disable' %}"freedom"{% else %}"WARP"{% endif %},
+            "geosite":[
+                "hiddify-hetzner-warp",
+                "ookla-speedtest"
+              
+            ]
+        },
+        {% if hconfigs['warp_mode'] != 'disable' and hconfigs.get('warp_sites','').split('\n') %}
+        {
+            "outbound": "WARP",
+            "domain":[                
+                  {%for d in hconfigs.get('warp_sites','').split('\n')%}
+                      "{{d.strip()}}",
+                  {% endfor %}
+            ]
+        },
+        {% endif %}
+        {
+          "outbound": "blackhole", "geoip": ["private"]
+        }
+        // {// Block BitTorrent protocol
+        //   "type": "field", "outboundTag": "blackhole", "protocol": ["bittorrent"]
+        // },
+      ]
+    }
+  
+
+}
